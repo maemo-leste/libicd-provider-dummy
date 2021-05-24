@@ -74,7 +74,8 @@ static void dummy_connect (const gchar *service_type,
                     gpointer connect_cb_token,
                     gpointer *private)
 {
-    ILOG_DEBUG("dummy_connect\n");
+    ILOG_DEBUG("dummy_connect: %s\n", network_id);
+    connect_cb(ICD_SRV_SUCCESS, NULL, connect_cb_token);
     return;
 }
 
@@ -104,7 +105,8 @@ static void dummy_disconnect (const gchar *service_type,
                        gpointer disconnect_cb_token,
                        gpointer *private)
 {
-    ILOG_DEBUG("dummy_disconnect\n");
+    ILOG_DEBUG("dummy_disconnect: %s\n", network_id);
+    disconnect_cb(ICD_SRV_SUCCESS, disconnect_cb_token);
     return;
 }
 
@@ -144,7 +146,7 @@ static void dummy_identify (enum icd_scan_status status,
                     DUMMY_PROVIDER_TYPE,
                     DUMMY_PROVIDER_NAME,
                     0, /* XXX: service attributes */
-                    DUMMY_PROVIDER_ID, /* XXX: internal service id */
+                    DUMMY_PROVIDER_ID,
                     0, /* XXX: service priority */
                     network_type,
                     network_attrs,
@@ -157,7 +159,7 @@ static void dummy_identify (enum icd_scan_status status,
                     DUMMY_PROVIDER_TYPE,
                     DUMMY_PROVIDER_NAME,
                     0, /* XXX: service attributes */
-                    DUMMY_PROVIDER_ID, /* XXX: internal service id */
+                    DUMMY_PROVIDER_ID,
                     0, /* XXX: service priority */
                     network_type,
                     network_attrs,
@@ -178,6 +180,7 @@ static void dummy_identify (enum icd_scan_status status,
 static void dummy_child_exit (const pid_t pid,
                        const gint exit_status,
                        gpointer *private) {
+    ILOG_DEBUG("dummy_child_exit\n");
     return;
 }
 
