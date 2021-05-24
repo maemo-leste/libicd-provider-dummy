@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<gconfschemafile>
+	<schemalist>
+		<schema>
+			<key>/schemas/system/osso/connectivity/srv_provider/DUMMY/module</key>
+			<applyto>/system/osso/connectivity/srv_provider/DUMMY/module</applyto>
+			<owner>libicd_provider_dummy</owner>
+			<type>string</type>
+			<default>libicd_provider_dummy.so</default>
+			<locale name="C">
+				<short>Dummy provider module</short>
+				<long>Dummy service provider module for ICd2 testing</long>
+			</locale>
+		</schema>
+        <schema>
+            <key>/schemas/system/osso/connectivity/srv_provider/DUMMY/network_type</key>
+            <applyto>/system/osso/connectivity/srv_provider/DUMMY/network_type</applyto>
+            <owner>libicd_provider_dummy</owner>
+            <type>list</type>
+            <list_type>string</list_type>
+            <default>[DUMMY]</default>
+            <locale name="C">
+                <short>Supported network types</short>
+                <long>List of the network types supported by this provider</long>
+            </locale>
+        </schema>
+	</schemalist>
+</gconfschemafile>

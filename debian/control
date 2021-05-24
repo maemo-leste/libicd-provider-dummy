@@ -1,0 +1,16 @@
+Source: libicd-provider-dummy
+Priority: optional
+Maintainer: Merlijn Wajer <merlijn@wizzup.org>
+Build-Depends: debhelper (>> 10), autotools-dev,
+ libglib2.0-dev, libgconf2-dev,
+ icd2-dev, icd2-osso-ic-dev
+Section: net
+Standards-Version: 4.3.0
+
+Package: libicd-provider-dummy
+Section: net
+Architecture: any
+Multi-Arch: same
+Depends: icd2, ${shlibs:Depends}
+Description: ICd2 dummy service provider configuration module
+ ICd2 dummy service provider configuration module

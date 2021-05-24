@@ -1,0 +1,224 @@
+/*
+ * This file is part of libicd-provider-dummy
+ *
+ * Copyright (C) 2021 Merlijn Wajer <merlijn@wizzup.org>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * version 2.1 as published by the Free Software Foundation.
+ *
+ * This library is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA
+ *
+ */
+
+#include <string.h>
+#include <stdio.h>
+#include <glib.h>
+#include <gconf/gconf-client.h>
+
+#include <osso-ic-gconf.h>
+#include <support/icd_log.h>
+#include <srv_provider_api.h>
+
+// TODO CLEAN UP
+#undef ILOG_DEBUG
+#define ILOG_DEBUG(args...) do {            \
+        printf(args); \
+        fflush(stdout); \
+    } while (0)
+
+
+#define DUMMY_NETWORK_TYPE "DUMMY"
+#define DUMMY_PROVIDER_TYPE "DUMMY"
+#define DUMMY_PROVIDER_NAME "Dummy Provider"
+
+gboolean icd_srv_init (struct icd_srv_api *srv_api,
+                     icd_srv_watch_pid_fn watch_cb,
+                     gpointer watch_cb_token,
+                     icd_srv_close_fn close,
+                     icd_srv_limited_conn_fn limited_conn);
+
+
+/**
+ * Function to connect (or authenticate) to the service provider.
+ *
+ * @param service_type      service type
+ * @param service_attrs     service attributes
+ * @param service_id        internal id identifying the service
+ * @param network_type      type of network connected to
+ * @param network_attrs     network attributes
+ * @param network_id        network identification
+ * @param interface_name    network interface used
+ * @param connect_cb        callback to call when connection attempt is
+ *                          completed
+ * @param connect_cb_token  token to pass to the callback
+ * @param private           reference to the private icd_srv_api member
+ */
+static void dummy_connect (const gchar *service_type,
+                    const guint service_attrs,
+                    const gchar *service_id,
+                    const gchar *network_type,
+                    const guint network_attrs,
+                    const gchar *network_id,
+                    const gchar *interface_name,
+                    icd_srv_connect_cb_fn connect_cb,
+                    gpointer connect_cb_token,
+                    gpointer *private)
+{
+    ILOG_DEBUG("dummy_connect\n");
+    return;
+}
+
+/**
+ * Function to disconnect the service provider
+ *
+ * @param service_type         service type
+ * @param service_attrs        service attributes
+ * @param service_id           internal id identifying the service
+ * @param network_type         type of network connected to
+ * @param network_attrs        network attributes
+ * @param network_id           network identification
+ * @param interface_name       network interface used
+ * @param disconnect_cb        callback to call when disconnection is
+ *                             completed
+ * @param disconnect_cb_token  token to pass to the callback
+ * @param private              reference to the private icd_srv_api member
+ */
+static void dummy_disconnect (const gchar *service_type,
+                       const guint service_attrs,
+                       const gchar *service_id,
+                       const gchar *network_type,
+                       const guint network_attrs,
+                       const gchar *network_id,
+                       const gchar *interface_name,
+                       icd_srv_disconnect_cb_fn disconnect_cb,
+                       gpointer disconnect_cb_token,
+                       gpointer *private)
+{
+    ILOG_DEBUG("dummy_disconnect\n");
+    return;
+}
+
+
+/* Dummy service provider function to identify if a scan result is usable by the
+ * provider.
+ *
+ * @param status             status, see #icd_scan_status
+ * @param network_type       network type
+ * @param network_name       name of the network displayable to the user
+ * @param network_attrs      network attributes
+ * @param network_id         network identification
+ * @param signal             signal strength
+ * @param station_id         station id, e.g. MAC address or similar id
+ * @param dB                 absolute signal strength value in dB
+ * @param identify_cb        callback to call when the identification has
+ *                           been done
+ * @param identify_cb_token  token to pass to the identification callback
+ */
+static void dummy_identify (enum icd_scan_status status,
+                     const gchar *network_type,
+                     const gchar *network_name,
+                     const guint network_attrs,
+                     const gchar *network_id,
+                     const guint network_priority,
+                     enum icd_nw_levels signal,
+                     const gchar *station_id,
+                     const gint dB,
+                     icd_srv_identify_cb_fn identify_cb,
+                     gpointer identify_cb_token,
+                     gpointer *private) {
+    ILOG_DEBUG("dummy_identify: network_type: %s, network_name: %s, network_id: %s\n", network_type, network_name, network_id);
+
+    if (g_strcmp0(DUMMY_NETWORK_TYPE, network_type) == 0) {
+        ILOG_DEBUG("dummy_identify: MATCH\n");
+        identify_cb(ICD_SRV_IDENTIFIED,
+                    DUMMY_PROVIDER_TYPE,
+                    DUMMY_PROVIDER_NAME,
+                    0, /* XXX: service attributes */
+                    0, /* XXX: internal service id */
+                    0, /* XXX: service priority */
+                    network_type,
+                    network_attrs,
+                    network_id,
+                    identify_cb_token);
+
+    } else {
+        ILOG_DEBUG("dummy_identify: NO MATCH\n");
+        identify_cb(ICD_SRV_UNKNOWN,
+                    DUMMY_PROVIDER_TYPE,
+                    DUMMY_PROVIDER_NAME,
+                    0, /* XXX: service attributes */
+                    0, /* XXX: internal service id */
+                    0, /* XXX: service priority */
+                    network_type,
+                    network_attrs,
+                    network_id,
+                    identify_cb_token);
+    }
+    return;
+}
+
+
+/**
+ * Function to handle child process termination
+ *
+ * @param pid         the process id that exited
+ * @param exit_value  process exit value
+ * @param private     a reference to the icd_nw_api private member
+ */
+static void dummy_child_exit (const pid_t pid,
+                       const gint exit_status,
+                       gpointer *private) {
+    return;
+}
+
+
+/**
+ * Function to handle service provider destruction
+ *
+ * @param private  a reference to the icd_nw_api private member
+ */
+static void dummy_srv_destruct (gpointer *private)
+{
+    ILOG_DEBUG("dummy_srv_destruct\n");
+    return;
+}
+
+
+/** Dummy service provider module initialization function.
+ * @param srv_api icd_srv_api structure filled in by the module
+ * @param watch_cb function to inform ICd that a child process is to be
+ *        monitored for exit status
+ * @param watch_cb_token token to pass to the watch pid function
+ * @param close_cb function to inform ICd that the network connection is to be
+ *        closed
+ * @param limited_conn function to inform about limited connectivity for service
+ *        providing purposes. (optional)
+ * @return TRUE on succes; FALSE on failure whereby the module is unloaded
+ */
+gboolean icd_srv_init (struct icd_srv_api *srv_api,
+                     icd_srv_watch_pid_fn watch_cb,
+                     gpointer watch_cb_token,
+                     icd_srv_close_fn close,
+                     icd_srv_limited_conn_fn limited_conn)
+{
+  ILOG_DEBUG("icd_srv_init\n");
+
+  srv_api->version = ICD_SRV_MODULE_VERSION;
+  srv_api->private = NULL;
+  srv_api->connect = dummy_connect;
+  srv_api->disconnect = dummy_disconnect;
+  srv_api->identify = dummy_identify;
+  srv_api->child_exit = dummy_child_exit;
+  srv_api->srv_destruct = dummy_srv_destruct;
+
+  return TRUE;
+}

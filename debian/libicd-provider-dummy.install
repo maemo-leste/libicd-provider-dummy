@@ -1,0 +1,2 @@
+etc/gconf/schemas/libicd-provider-dummy.schemas
+usr/lib/icd2/libicd_provider_dummy.so
