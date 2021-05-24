@@ -39,6 +39,7 @@
 #define DUMMY_NETWORK_TYPE "DUMMY"
 #define DUMMY_PROVIDER_TYPE "DUMMY"
 #define DUMMY_PROVIDER_NAME "Dummy Provider"
+#define DUMMY_PROVIDER_ID "dummy-provider"
 
 gboolean icd_srv_init (struct icd_srv_api *srv_api,
                      icd_srv_watch_pid_fn watch_cb,
@@ -143,7 +144,7 @@ static void dummy_identify (enum icd_scan_status status,
                     DUMMY_PROVIDER_TYPE,
                     DUMMY_PROVIDER_NAME,
                     0, /* XXX: service attributes */
-                    0, /* XXX: internal service id */
+                    DUMMY_PROVIDER_ID, /* XXX: internal service id */
                     0, /* XXX: service priority */
                     network_type,
                     network_attrs,
@@ -156,7 +157,7 @@ static void dummy_identify (enum icd_scan_status status,
                     DUMMY_PROVIDER_TYPE,
                     DUMMY_PROVIDER_NAME,
                     0, /* XXX: service attributes */
-                    0, /* XXX: internal service id */
+                    DUMMY_PROVIDER_ID, /* XXX: internal service id */
                     0, /* XXX: service priority */
                     network_type,
                     network_attrs,
