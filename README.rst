@@ -14,6 +14,31 @@ specific network is picked, yet. If we do the same for wifi, we want to be able
 to pick a service provider *AND* a specific IAP. We need to figure out how this
 works in the UI.
 
+To investigate
+==============
+
+
+FAQ
+===
+
+Can providers be chained?
+-------------------------
+
+From icd/icd_srv_provider.c's icd_srv_provider_connect, it looks like they
+likely cannot be chained. Thus there can be only one provider. (The function
+searches for a specific module and calls the connect() function there)
+
+But ... what does icd_srv_provider_has_next do?
+
+I saw this when connecting to my wlan provider:
+
+Jun 29 13:31:54 localhost icd2 0.98[20661]: calling service provider module
+Jun 29 13:31:54 localhost icd2 0.98[20661]: dummy_connect: 7de4b188-3ef1-4859-80d8-676b0682db85
+Jun 29 13:31:54 localhost icd2 0.98[20661]: service module connect callback
+Jun 29 13:31:54 localhost icd2 0.98[20661]: No service provider module to call
+
+So it looks like you can actually chain services
+
 
 Preferred service
 =================
@@ -38,6 +63,16 @@ This might also do something for getting the icon of an IAP:
 
 $ gconftool -t string -s /system/osso/connectivity/srv_provider/DUMMY/custom_ui/dummy-provider/type_icon_name general_wlan
 
+
+Setup in gconf
+==============
+
+$ gconftool -R /system/osso/connectivity/srv_provider
+ /system/osso/connectivity/srv_provider/DUMMY:
+  module = libicd_provider_dummy.so
+  network_type = [DUMMY,WLAN_INFRA]
+
+$ gconftool -s /system/osso/connectivity/srv_provider/DUMMY/network_type --type list --list-type string '[DUMMY,WLAN_INFRA]'
 
 
 
