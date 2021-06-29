@@ -28,13 +28,6 @@
 #include <support/icd_log.h>
 #include <srv_provider_api.h>
 
-// TODO CLEAN UP
-#undef ILOG_DEBUG
-#define ILOG_DEBUG(args...) do {            \
-        printf(args); \
-        fflush(stdout); \
-    } while (0)
-
 
 #define DUMMY_NETWORK_TYPE "DUMMY"
 #define DUMMY_PROVIDER_TYPE "DUMMY"
@@ -140,11 +133,17 @@ static void dummy_identify (enum icd_scan_status status,
                      gpointer *private) {
     ILOG_DEBUG("dummy_identify: network_type: %s, network_name: %s, network_id: %s\n", network_type, network_name, network_id);
 
-    if (g_strcmp0(DUMMY_NETWORK_TYPE, network_type) == 0) {
+    /* We construct a name here to make it apparent this is a dummy provider */
+    gchar *name = g_strconcat(network_name, " (", DUMMY_PROVIDER_NAME, ") ", NULL);
+    ILOG_DEBUG("dummy_identify: called for: %s\n", name);
+
+    if ((g_strcmp0("WLAN_INFRA", network_type) == 0) ||
+        (g_strcmp0("DUMMY", network_type) == 0))
+    {
         ILOG_DEBUG("dummy_identify: MATCH\n");
         identify_cb(ICD_SRV_IDENTIFIED,
-                    DUMMY_PROVIDER_TYPE,
-                    DUMMY_PROVIDER_NAME,
+                    DUMMY_PROVIDER_TYPE, /* service type */
+                    name,
                     0, /* XXX: service attributes */
                     DUMMY_PROVIDER_ID,
                     0, /* XXX: service priority */
@@ -156,8 +155,8 @@ static void dummy_identify (enum icd_scan_status status,
     } else {
         ILOG_DEBUG("dummy_identify: NO MATCH\n");
         identify_cb(ICD_SRV_UNKNOWN,
-                    DUMMY_PROVIDER_TYPE,
-                    DUMMY_PROVIDER_NAME,
+                    DUMMY_PROVIDER_TYPE, /* service type */
+                    name,
                     0, /* XXX: service attributes */
                     DUMMY_PROVIDER_ID,
                     0, /* XXX: service priority */
@@ -166,6 +165,8 @@ static void dummy_identify (enum icd_scan_status status,
                     network_id,
                     identify_cb_token);
     }
+
+    free(name);
     return;
 }
 
