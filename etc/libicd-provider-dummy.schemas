@@ -18,7 +18,7 @@
             <owner>libicd_provider_dummy</owner>
             <type>list</type>
             <list_type>string</list_type>
-            <default>[DUMMY]</default>
+            <default>[DUMMY,WLAN_INFRA]</default>
             <locale name="C">
                 <short>Supported network types</short>
                 <long>List of the network types supported by this provider</long>
