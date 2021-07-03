@@ -1,3 +1,9 @@
+libicd-provider-dummy (0.1.1) unstable; urgency=medium
+
+  * Only accept IAPs that have service_type set to "DUMMY"
+
+ -- Merlijn Wajer <merlijn@wizzup.org>  Sat, 03 Jul 2021 23:35:49 +0200
+
 libicd-provider-dummy (0.1) unstable; urgency=medium
 
   * Initial release
