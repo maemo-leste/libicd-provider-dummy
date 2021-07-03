@@ -133,12 +133,34 @@ static void dummy_identify (enum icd_scan_status status,
                      gpointer *private) {
     ILOG_DEBUG("dummy_identify: network_type: %s, network_name: %s, network_id: %s\n", network_type, network_name, network_id);
 
+    GConfClient *gconf_client;
+    GConfValue *value;
+    GError *error = NULL;
+    gchar* iap_gconf_key;
+    const char* gconf_service_type = NULL;
+
+    gconf_client = gconf_client_get_default();
+
+    // TODO: we don't read service_id yet
+    // TODO: check this code for memleaks
+    iap_gconf_key = g_strdup_printf("/system/osso/connectivity/IAP/%s/service_type", network_id);
+    value = gconf_client_get(gconf_client, iap_gconf_key, &error);
+    g_free(iap_gconf_key);
+
+    if (error) {
+        g_clear_error(&error);
+    } else {
+        gconf_service_type = gconf_value_get_string(value);
+    }
+
+    g_object_unref(gconf_client);
+
+
     /* We construct a name here to make it apparent this is a dummy provider */
     gchar *name = g_strconcat(network_name, " (", DUMMY_PROVIDER_NAME, ") ", NULL);
     ILOG_DEBUG("dummy_identify: called for: %s\n", name);
 
-    if ((g_strcmp0("WLAN_INFRA", network_type) == 0) ||
-        (g_strcmp0("DUMMY", network_type) == 0))
+    if (g_strcmp0(DUMMY_PROVIDER_NAME, gconf_service_type) == 0)
     {
         ILOG_DEBUG("dummy_identify: MATCH\n");
         identify_cb(ICD_SRV_IDENTIFIED,
