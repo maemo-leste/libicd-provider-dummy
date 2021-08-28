@@ -24,5 +24,49 @@
                 <long>List of the network types supported by this provider</long>
             </locale>
         </schema>
+        <schema>
+            <key>/schemas/system/osso/connectivity/srv_provider/DUMMY/default_custom_ui/type_icon_name</key>
+            <applyto>/system/osso/connectivity/srv_provider/DUMMY/default_custom_ui/type_icon_name</applyto>
+            <owner>libicd_provider_dummy</owner>
+            <type>string</type>
+            <default>mediaplayer_internet_radio_favorite</default>
+            <locale name="C">
+                <short>Icon name for Dummy provider</short>
+                <long>Icon name for the Dummy provider ICD2 plugin</long>
+            </locale>
+        </schema>
+        <schema>
+            <key>/schemas/system/osso/connectivity/srv_provider/DUMMY/default_custom_ui/type_statusbar_icon_name</key>
+            <applyto>/system/osso/connectivity/srv_provider/DUMMY/default_custom_ui/type_statusbar_icon_name</applyto>
+            <owner>libicd_provider_dummy</owner>
+            <type>string</type>
+            <default>general_tickmark_checked</default>
+            <locale name="C">
+                <short>Connected statusbar icon name for Dummy provider</short>
+                <long>Connected statusbar icon name for the Dummy provider ICD2 plugin</long>
+            </locale>
+        </schema>
+        <schema>
+            <key>/schemas/system/osso/connectivity/srv_provider/DUMMY/default_custom_ui/type_statusbar_dimmed_icon_name</key>
+            <applyto>/system/osso/connectivity/srv_provider/DUMMY/default_custom_ui/type_statusbar_dimmed_icon_name</applyto>
+            <owner>libicd_provider_dummy</owner>
+            <type>string</type>
+            <default>general_tickmark_unchecked</default>
+            <locale name="C">
+                <short>Connecting statusbar icon name for Dummy provider</short>
+                <long>Connecting statusbar icon name for the Dummy provider ICD2 plugin</long>
+            </locale>
+        </schema>
+        <schema>
+            <key>/schemas/system/osso/connectivity/srv_provider/DUMMY/default_custom_ui/markup</key>
+            <applyto>/system/osso/connectivity/srv_provider/DUMMY/default_custom_ui/markup</applyto>
+            <owner>libicd_provider_dummy</owner>
+            <type>string</type>
+            <default>%s &lt;b&gt;(Dummy)&lt;/b&gt;</default>
+            <locale name="C">
+                <short>Markup for the Dummy provider</short>
+                <long>Markup string for the Dummy provider ICD2 plugin</long>
+            </locale>
+        </schema>
 	</schemalist>
 </gconfschemafile>
